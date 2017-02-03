@@ -1,0 +1,66 @@
+<html>
+<head>
+  <script src="virtualjoystick.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		
+    <style>
+    body {
+        overflow	: hidden;
+        padding		: 0;
+        margin		: 0;
+        background-color: #BBB;
+    }
+    #info {
+        position	: absolute;
+        top		: 0px;
+        width		: 100%;
+        padding		: 5px;
+        text-align	: center;
+    }
+    #info a {
+        color		: #66F;
+        text-decoration	: none;
+    }
+    #info a:hover {
+        text-decoration	: underline;
+    }
+    #container {
+        width		: 100%;
+        height		: 100%;
+        overflow	: hidden;
+        padding		: 0;
+        margin		: 0;
+        -webkit-user-select	: none;
+        -moz-user-select	: none;
+    }
+    </style>
+</head>
+<body>
+  <div id="container"></div>
+  <script>
+    var joystick	= new VirtualJoystick({
+      container : document.getElementById('container'),
+      mouseSupport : true,
+    });
+    setInterval(function(){
+      var speed = joystick.deltaY();
+      if (speed >= 0) {
+        speed = 0;
+      } else if (speed < -255) {
+        speed = 255;
+      } else {
+        speed *= -1;
+      }
+      $.ajax({
+        url: "https://api.particle.io/v1/devices/1e0042000c47343432313031/cloud-motor?access_token=db98c6819dc723652f9c558579976611d7c0ee27",
+        type: "post",
+        data: {speed: speed}
+      });
+      console.log(speed);
+    }, 1000);
+
+  </script>
+</body>
+</html>
